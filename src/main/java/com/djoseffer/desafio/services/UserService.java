@@ -21,7 +21,11 @@ public class UserService {
     }
 
     public Optional<EntityUsers> findById(Long id) {
-        return repository.findById(id);
+        var getId = repository.findById(id);
+        if (getId.isPresent()) {
+            return repository.findById(id);
+        }
+        throw new IllegalArgumentException("Id not found");
     }
 
     @Transactional
@@ -35,6 +39,15 @@ public class UserService {
 
     @Transactional
     public void delete(Long id) {
+        Optional<EntityUsers> deleteId = repository.findById(id);
+        if (deleteId.isEmpty()) {
+            throw new IllegalArgumentException("Id not found");
+        }
         repository.deleteById(id);
+    }
+
+    @Transactional
+    public void update(EntityUsers entityUsers) {
+        repository.save(entityUsers);
     }
 }
