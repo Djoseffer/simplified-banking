@@ -45,12 +45,17 @@ public class UserController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Id not found"));
     }
 
+    @PutMapping({"/{id}"})
+    public ResponseEntity<Object> put(@PathVariable Long id, @RequestBody UsersDTO usersDTO){
+        Optional<EntityUsers>updateUser = userService.findById(id);
+        var saveUpadate = updateUser.get();
+        BeanUtils.copyProperties(usersDTO, saveUpadate);
+        userService.update(saveUpadate);
+        return ResponseEntity.status(HttpStatus.OK).body(saveUpadate);
+    }
+
     @DeleteMapping("/{id}")
     ResponseEntity<Object> deleteUser(@PathVariable Long id) {
-        Optional<EntityUsers> deleteId = userService.findById(id);
-        if (deleteId.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Id not found");
-        }
         userService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).body("Delete user successfully");
     }
