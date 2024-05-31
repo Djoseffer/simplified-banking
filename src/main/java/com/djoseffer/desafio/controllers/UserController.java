@@ -1,5 +1,6 @@
 package com.djoseffer.desafio.controllers;
 
+import com.djoseffer.desafio.domain.dtos.UpdateDTO;
 import com.djoseffer.desafio.domain.entities.EntityUsers;
 import com.djoseffer.desafio.domain.dtos.UsersDTO;
 import com.djoseffer.desafio.services.UserDataService;
@@ -46,10 +47,10 @@ public class UserController {
     }
 
     @PutMapping({"/{id}"})
-    public ResponseEntity<Object> put(@PathVariable Long id, @RequestBody UsersDTO usersDTO){
+    public ResponseEntity<Object> put(@PathVariable Long id, @RequestBody UpdateDTO updateDTO){
         Optional<EntityUsers>updateUser = userService.findById(id);
         var saveUpadate = updateUser.get();
-        BeanUtils.copyProperties(usersDTO, saveUpadate);
+        BeanUtils.copyProperties(updateDTO, saveUpadate);
         userService.update(saveUpadate);
         return ResponseEntity.status(HttpStatus.OK).body(saveUpadate);
     }

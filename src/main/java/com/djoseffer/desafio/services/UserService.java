@@ -32,9 +32,9 @@ public class UserService {
     public void saveUser(EntityUsers entityAccount) {
         if (!repository.existsByDocument(entityAccount.getDocument())) {
             repository.save(entityAccount);
-        } else {
-            throw new DuplicateFormatFlagsException("Duplicate document ");
         }
+        throw new DuplicateFormatFlagsException("Duplicate document ");
+
     }
 
     @Transactional
@@ -47,7 +47,7 @@ public class UserService {
     }
 
     @Transactional
-    public void update(EntityUsers entityUsers) {
-        repository.save(entityUsers);
+    public void update(EntityUsers updatedUser) {
+        repository.save(updatedUser);
     }
 }
