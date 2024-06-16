@@ -9,6 +9,8 @@ import com.djoseffer.desafio.repositories.UserDataRepository;
 import com.djoseffer.desafio.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -27,8 +29,8 @@ public class TransactionService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<EntityTransaction> findAll() {
-        return transactionRepository.findAll();
+    public Page<EntityTransaction> findAll(Pageable pageable) {
+        return transactionRepository.findAll(pageable);
     }
 
     public Optional<EntityTransaction> findById(Long id) {

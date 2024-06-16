@@ -4,6 +4,8 @@ import com.djoseffer.desafio.domain.entities.EntityUsers;
 import com.djoseffer.desafio.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.DuplicateFormatFlagsException;
@@ -16,8 +18,8 @@ public class UserService {
     @Autowired
     private UserRepository repository;
 
-    public List<EntityUsers> getFindAll() {
-        return repository.findAll();
+    public Page<EntityUsers> getFindAll(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 
     public Optional<EntityUsers> findById(Long id) {
