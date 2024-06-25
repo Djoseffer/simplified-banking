@@ -1,8 +1,7 @@
 package com.djoseffer.desafio.domain.entities;
 
-import com.djoseffer.desafio.domain.entities.enums.UserType;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,33 +11,34 @@ import lombok.Setter;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
-@Table(name = "userData")
 @Entity
+@Table(name = "transfers_pix")
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class EntityUserAccount implements Serializable {
+@NoArgsConstructor
+public class EntityPix implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank
     @NotNull
-    @Column(unique = true)
-    private Long accountNumber;
+    private String namePayer;
+    @NotBlank
     @NotNull
-    private Long agency;
+    private String nameReceiver;
     @NotNull
-    private BigDecimal balance;
+    private BigDecimal pixValue;
     @NotNull
-    @Enumerated(EnumType.STRING)
-    private UserType type;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    @JsonBackReference
-    private EntityUsers entityUser;
+    @NotBlank
+    private String documentPayer;
+    @NotNull
+    @NotBlank
+    private String documentReceiver;
+    LocalDateTime dateStamp;
 }

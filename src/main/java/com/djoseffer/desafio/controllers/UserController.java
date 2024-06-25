@@ -37,7 +37,7 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<EntityUsers>> getAll(@PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC)Pageable pageable) {
+    public ResponseEntity<Page<EntityUsers>> getAll(@PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.getFindAll(pageable));
     }
 
@@ -50,8 +50,8 @@ public class UserController {
     }
 
     @PutMapping({"/{id}"})
-    public ResponseEntity<Object> put(@PathVariable Long id, @RequestBody UpdateDTO updateDTO){
-        Optional<EntityUsers>updateUser = userService.findById(id);
+    public ResponseEntity<Object> put(@PathVariable Long id, @RequestBody UpdateDTO updateDTO) {
+        Optional<EntityUsers> updateUser = userService.findById(id);
         var saveUpadate = updateUser.get();
         BeanUtils.copyProperties(updateDTO, saveUpadate);
         userService.update(saveUpadate);

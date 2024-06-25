@@ -1,9 +1,10 @@
 package com.djoseffer.desafio.services;
 
+import com.djoseffer.desafio.controllers.TransactionsController;
 import com.djoseffer.desafio.domain.entities.EntityTransaction;
 import com.djoseffer.desafio.domain.entities.EntityUserAccount;
 import com.djoseffer.desafio.domain.entities.EntityUsers;
-import com.djoseffer.desafio.domain.entities.TransactionType;
+import com.djoseffer.desafio.domain.entities.enums.TransactionType;
 import com.djoseffer.desafio.repositories.TransactionRepository;
 import com.djoseffer.desafio.repositories.UserDataRepository;
 import com.djoseffer.desafio.repositories.UserRepository;
@@ -14,8 +15,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Optional;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
 public class TransactionService {
@@ -30,7 +33,12 @@ public class TransactionService {
     private UserRepository userRepository;
 
     public Page<EntityTransaction> findAll(Pageable pageable) {
-        return transactionRepository.findAll(pageable);
+        Page<EntityTransaction> listAll = transactionRepository.findAll(pageable);
+        for (EntityTransaction entity : listAll) {
+            long id = entity.getId();
+            entity.add(linkTo(methodOn(TransactionsController.class).getOne(id)).withSelfRel());
+        }
+        return listAll;
     }
 
     public Optional<EntityTransaction> findById(Long id) {
@@ -50,7 +58,7 @@ public class TransactionService {
             throw new IllegalArgumentException("Invalid transaction type");
         }
 
-        Optional<EntityUsers> userOptional = userRepository.findByDocument(entity.getDocument());
+        Optional<EntityUsers> userOptional = Optional.ofNullable(userRepository.findByDocument(entity.getDocument()));
         if (userOptional.isEmpty()) {
             throw new IllegalArgumentException("User not found");
         }
@@ -74,7 +82,7 @@ public class TransactionService {
 
     @Transactional
     public void processTransaction(EntityTransaction entity) {
-        Optional<EntityUsers> userOptional = userRepository.findByDocument(entity.getDocument());
+        Optional<EntityUsers> userOptional = Optional.ofNullable(userRepository.findByDocument(entity.getDocument()));
         EntityUsers user = userOptional.get();
 
         EntityUserAccount account = user.getUserAccounts().stream()
@@ -95,7 +103,7 @@ public class TransactionService {
     }
 
     public BigDecimal getUpdatedBalance(String document) {
-        Optional<EntityUsers> userOptional = userRepository.findByDocument(document);
+        Optional<EntityUsers> userOptional = Optional.ofNullable(userRepository.findByDocument(document));
         if (userOptional.isEmpty()) {
             throw new IllegalArgumentException("User not found");
         }

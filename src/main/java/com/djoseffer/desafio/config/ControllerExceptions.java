@@ -13,27 +13,33 @@ import java.util.DuplicateFormatFlagsException;
 public class ControllerExceptions {
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity threatDataEmpty() {
+    public ResponseEntity<ExceptionDTO> threatDataEmpty() {
         ExceptionDTO exceptionDTO = new ExceptionDTO("Field must not be empty", "400");
         return ResponseEntity.badRequest().body(exceptionDTO);
     }
 
     @ExceptionHandler(DuplicateFormatFlagsException.class)
-    public ResponseEntity threatDuplicateRegister() {
+    public ResponseEntity<ExceptionDTO> threatDuplicateRegister() {
         ExceptionDTO exceptionDTO = new ExceptionDTO("The document is already registered", "409");
         return ResponseEntity.badRequest().body(exceptionDTO);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity threatFormatError() {
+    public ResponseEntity<ExceptionDTO> threatFormatError() {
         ExceptionDTO exceptionDTO = new ExceptionDTO(
                 "Error registering customer. Check the fields.\n" +
                         "The type field must be ACCOUNTHOLDER or SAVINGSHOLDER", "400");
         return ResponseEntity.badRequest().body(exceptionDTO);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ExceptionDTO> handleIllegalArgumentException(IllegalArgumentException e) {
+        ExceptionDTO exceptionDTO = new ExceptionDTO(e.getMessage(), "400");
+        return ResponseEntity.badRequest().body(exceptionDTO);
+    }
+
     @ExceptionHandler(Exception.class)
-    public ResponseEntity threatGeneralException(Exception e) {
+    public ResponseEntity<ExceptionDTO> threatGeneralException(Exception e) {
         ExceptionDTO exceptionDTO = new ExceptionDTO(e.getMessage(), "500");
         return ResponseEntity.internalServerError().body(exceptionDTO);
     }

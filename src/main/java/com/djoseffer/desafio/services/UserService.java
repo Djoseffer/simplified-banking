@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.DuplicateFormatFlagsException;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,11 +31,10 @@ public class UserService {
 
     @Transactional
     public void saveUser(EntityUsers entityAccount) {
-        if (!repository.existsByDocument(entityAccount.getDocument())) {
-            repository.save(entityAccount);
+        if (repository.existsByDocument(entityAccount.getDocument())) {
+            throw new DuplicateFormatFlagsException("Duplicate document");
         }
-        throw new DuplicateFormatFlagsException("Duplicate document ");
-
+        repository.save(entityAccount);
     }
 
     @Transactional

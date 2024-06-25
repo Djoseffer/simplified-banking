@@ -1,5 +1,6 @@
 package com.djoseffer.desafio.domain.entities;
 
+import com.djoseffer.desafio.domain.entities.enums.UserType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -8,7 +9,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Immutable;
 
 import java.math.BigDecimal;
 import java.util.Set;

@@ -14,9 +14,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/transactions")
@@ -37,6 +42,7 @@ public class TransactionsController {
             Map<String, Object> response = new HashMap<>();
             response.put("transaction", transaction);
             response.put("updatedBalance", updatedBalance);
+            transaction.setDateStamp(LocalDateTime.now(ZoneId.of("UTC")));
 
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (Exception e) {
@@ -45,13 +51,14 @@ public class TransactionsController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<EntityTransaction>> getAll(@PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC)Pageable pageable) {
+    public ResponseEntity<Page<EntityTransaction>> getAll(@PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(transactionService.findAll(pageable));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getOne(@PathVariable Long id) {
         Optional<EntityTransaction> getId = transactionService.findById(id);
+        getId.get().add(linkTo(methodOn(TransactionsController.class).getAll(Pageable.unpaged())).withRel("Transactions list"));
         return getId.<ResponseEntity<Object>>map(entityTransaction ->
                         ResponseEntity.status(HttpStatus.OK).body(entityTransaction))
                 .orElseGet(() -> ResponseEntity

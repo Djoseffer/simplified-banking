@@ -1,6 +1,6 @@
 package com.djoseffer.desafio.domain.dtos;
 
-import com.djoseffer.desafio.domain.entities.TransactionType;
+import com.djoseffer.desafio.domain.entities.enums.TransactionType;
 
 import java.math.BigDecimal;
 
